@@ -20,14 +20,6 @@ A scenerio where people can just deploy a basic version of this repo through rai
 sudo docker rm -f $(sudo docker ps -aq) && sudo docker compose -f dev.docker-compose.yml up -d
 ```
 
-## Loading Sample Data
-
-To load the sample data, run the following command:
-
-```
-python manage.py loaddata shop/fixtures/sample_data.json
-```
-
 ### Special Credits
 
 akurutype.com for ak rasmee
