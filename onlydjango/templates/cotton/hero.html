@@ -1,0 +1,83 @@
+{% load wagtailimages_tags %}
+
+<div x-data="{ currentSlide: 0, slides: {{ slides|length }} }" class="relative overflow-hidden w-full h-screen">
+    <div class="absolute inset-0 flex transition-transform duration-700 ease-in-out"
+         :style="'transform: translateX(-' + (currentSlide * 100) + '%)'">
+        {% for slide in slides %}
+            <div class="w-full h-full flex-shrink-0 relative">
+                {% if slide.slide_image %}
+                    {% image slide.slide_image fill-1920x1080 format-webp as slide_image %}
+                    <img src="{{ slide_image.url }}" alt="{{ slide.title }}" class="absolute w-full h-full object-cover"
+                         width="{{ slide_image.width }}" height="{{ slide_image.height }}">
+                {% else %}
+                    <div class="absolute w-full h-full bg-gray-300 flex items-center justify-center">No image
+                        available
+                    </div>
+                {% endif %}
+                <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-black via-transparent to-black bg-opacity-50">
+                    <div class="text-center text-white px-6 sm:px-8 w-full max-w-4xl">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4 animate-fadeIn">{{ slide.title }}</h2>
+                        <p class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-4 sm:mb-6 md:mb-8 animate-fadeIn animation-delay-300">{{ slide.description }}</p>
+                        
+                       
+                        <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-4 sm:mb-6 md:mb-8 animate-fadeIn animation-delay-300">{{ slide.description }}</p>
+                        <a href="#"
+                           class="inline-block bg-white text-black px-4 sm:px-5 md:px-7 py-2 sm:py-3 rounded-full text-sm sm:text-base md:text-lg font-semibold hover:bg-opacity-90 transition duration-300 animate-fadeIn animation-delay-600">Shop
+                            Now</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <button
+            class="absolute left-2 sm:left-4 md:left-6 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 sm:p-3 focus:outline-none transition duration-300"
+            x-on:click="currentSlide = (currentSlide - 1 + slides) % slides">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+    <button
+            class="absolute right-2 sm:right-4 md:right-6 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 sm:p-3 focus:outline-none transition duration-300"
+            x-on:click="currentSlide = (currentSlide + 1) % slides">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+    </button>
+    <div class="absolute bottom-2 sm:bottom-4 left-0 right-0 flex justify-center space-x-2">
+        {% for slide in slides %}
+            <button
+                    @click="currentSlide = {{ forloop.counter0 }}"
+                    class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors duration-200 ease-in-out"
+                    :class="{'bg-white': currentSlide === {{ forloop.counter0 }}, 'bg-gray-400': currentSlide !== {{ forloop.counter0 }}}">
+            </button>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .animation-delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    .animation-delay-600 {
+        animation-delay: 0.6s;
+    }
+</style>
+

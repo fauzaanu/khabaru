@@ -1,0 +1,27 @@
+<div x-data="{ mobileFiltersOpen: false }" class="lg:w-1/4 mb-8 lg:mb-0">
+    <button @click="mobileFiltersOpen = !mobileFiltersOpen" class="lg:hidden w-full bg-red-600 text-white py-2 px-4 rounded mb-4 transition duration-300 ease-in-out hover:bg-red-700">
+        <span x-text="mobileFiltersOpen ? 'Hide Categories' : 'Show Categories'"></span>
+    </button>
+    <div 
+        x-show="mobileFiltersOpen || window.innerWidth >= 1024"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-95"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform scale-100"
+        x-transition:leave-end="opacity-0 transform scale-95"
+        class="lg:block bg-white shadow-md rounded-lg p-6"
+    >
+        <h3 class="font-bold text-xl mb-4 text-red-600">Categories</h3>
+        <ul class="space-y-2">
+            <li {% if not category %}class="font-bold"{% endif %}>
+                <a href="{{ all_products_url }}" class="block py-2 px-4 rounded-md text-black hover:bg-red-600 hover:text-white transition duration-300 ease-in-out">All</a>
+            </li>
+            {% for c in categories %}
+                <li {% if category and category.slug == c.slug %}class="font-bold"{% endif %}>
+                    <a href="{{ c.url }}" class="block py-2 px-4 rounded-md text-black hover:bg-red-600 hover:text-white transition duration-300 ease-in-out">{{ c.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

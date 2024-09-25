@@ -1,0 +1,17 @@
+/*@font-face {*/
+/*    font-family: 'Dhivehi';*/
+/*    src: url('/static/fonts/ak_liyan_bold.ttf') format('truetype');*/
+/*    font-weight: bold;*/
+/*    font-style: normal;*/
+/*}*/
+
+@font-face {
+    font-family: 'Dhivehi';
+    src: url('/static/fonts/ak_rasmee.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Dhivehi', sans-serif;
+}
