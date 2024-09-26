@@ -9,7 +9,7 @@ WSGI_APPLICATION = "onlydjango.wsgi.application"
 SILENCED_SYSTEM_CHECKS = ['slippers.E001']
 
 FIRST_PARTY_APPS = [
-    "sampleapp",
+    "newsadmin",
 ]
 
 ALL_AUTH_APPS = [

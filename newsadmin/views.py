@@ -1,61 +1,53 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from .forms import NewsArticleForm
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_POST
+
 from sampleapp.models import NewsArticle
 
 
-def is_editor(user):
-    return user.is_staff or user.is_superuser
-
-
-@user_passes_test(is_editor)
-def dashboard(request):
-    recent_articles = NewsArticle.objects.order_by('-created_at')[:5]
-    return render(request, 'newsadmin/dashboard.html', {'recent_articles': recent_articles})
-
-
-@user_passes_test(is_editor)
-def article_list(request):
-    articles = NewsArticle.objects.all().order_by('-date')
-    return render(request, 'newsadmin/article_list.html', {'articles': articles})
-
-
-@user_passes_test(is_editor)
-def article_create(request):
+@require_POST
+def post(request):
     if request.method == 'POST':
-        form = NewsArticleForm(request.POST, request.FILES)
-        if form.is_valid():
-            article = form.save(commit=False)
-            article.author = request.user
+        title = request.POST.get('title')
+        slug = request.POST.get('slug')
+        date = request.POST.get('date')
+        intro = request.POST.get('intro')
+        content = request.POST.get('content')
+        main_image = request.FILES.get('main_image')
+        og_image = request.FILES.get('og_image')
+        featured_media = request.FILES.get('featured_media')
+        featured_youtube = request.POST.get('featured_youtube')
+        tags = request.POST.get('tags')
+
+        # Validate required fields
+        if not title or not slug or not date or not main_image:
+            print("Please fill in all required fields.")
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, 'newsadmin/index.html')
+
+        article = NewsArticle(
+            title=title,
+            slug=slug,
+            date=date,
+            intro=intro,
+            body=content,
+            main_image=main_image,
+            og_image=og_image,
+            featured_media=featured_media,
+            featured_youtube=featured_youtube
+        )
+
+        try:
             article.save()
-            form.save_m2m()  # Save tags
-            messages.success(request, 'Article created successfully.')
-            return redirect('newsadmin:article_list')
-    else:
-        form = NewsArticleForm()
-    return render(request, 'newsadmin/article_form.html', {'form': form})
+            print("Post saved successfully.")
+        except Exception as e:
+            print(f"Error saving post: {e}")
+            messages.error(request, "There was an error saving the post.")
+            return render(request, 'newsadmin/index.html')
 
+        if tags:
+            article.tags.add(*tags.split(','))  # Assuming tags are comma-separated
 
-@user_passes_test(is_editor)
-def article_edit(request, pk):
-    article = get_object_or_404(NewsArticle, pk=pk)
-    if request.method == 'POST':
-        form = NewsArticleForm(request.POST, request.FILES, instance=article)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Article updated successfully.')
-            return redirect('newsadmin:article_list')
-    else:
-        form = NewsArticleForm(instance=article)
-    return render(request, 'newsadmin/article_form.html', {'form': form, 'article': article})
+        return redirect('index')  # Redirect to the index page after saving
 
-
-@user_passes_test(is_editor)
-def article_delete(request, pk):
-    article = get_object_or_404(NewsArticle, pk=pk)
-    if request.method == 'POST':
-        article.delete()
-        messages.success(request, 'Article deleted successfully.')
-        return redirect('newsadmin:article_list')
-    return render(request, 'newsadmin/article_confirm_delete.html', {'article': article})
+    return render(request, 'newsadmin/index.html')
