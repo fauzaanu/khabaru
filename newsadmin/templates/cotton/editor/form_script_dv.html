@@ -1,0 +1,47 @@
+{% load static %}
+<script>
+    // Add the custom Dhivehi font to the page
+    const fontFace = `
+@font-face {
+    font-family: 'DhivehiFont';
+    src: url('{% static 'newsadmin/css/ak_rasmee.ttf' %}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ql-editor {
+  direction: rtl;
+  text-align: right;
+  font-size: 18px; /* Increased font size */
+  font-family: 'DhivehiFont', sans-serif; /* Apply Dhivehi font */
+}
+
+`;
+
+    const style = document.createElement('style');
+    style.textContent = fontFace;
+    document.head.appendChild(style);
+
+    var quill = new Quill('#editor-container', {
+        theme: 'bubble',
+        modules: {
+            toolbar: {
+                container: [
+                    [{'header': [1, 2, 3, 4, 5, false]}],
+                    ['bold', 'italic', 'underline'],
+                    ['image', 'link'],
+                    [{'align': []}],
+                    [{'color': []}, {'background': []}],
+                    ['clean']
+                ],
+            }
+        },
+        // Set editor to RTL by default
+        direction: 'rtl'
+    });
+
+    // Add event listener for form submission
+    document.querySelector('form').addEventListener('submit', function () {
+        document.querySelector('#content').value = quill.root.innerHTML;
+    });
+</script>
