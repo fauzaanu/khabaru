@@ -38,6 +38,8 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "slippers",
 
+    "taggit",
+
     'corsheaders'
 ]
 
@@ -61,11 +63,7 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 
 SITE_ID = 1
 CSRF_TRUSTED_ORIGINS = ["https://onlydjango.com", "https://www.onlydjango.com"]
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
-# Wagtail image settings
-WAGTAILIMAGES_FORMAT = 'webp'
-WAGTAILIMAGES_WEBP_QUALITY = 80  # Adjust this value as needed (0-100)
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -78,7 +76,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     # all-auth
     "allauth.account.middleware.AccountMiddleware",
 
